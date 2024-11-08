@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <!-- Для iPhone -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FakeTicket App">
+    <link rel="apple-touch-icon" href="Ticket_logo_192x192.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FakeTicket Web App</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        #scene1 {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            background-image: url('images/menu.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 100vw;
+            height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 8vw; /* Пропорциональный размер шрифта */
+            margin-bottom: 4vw;
+        }
+
+        form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            font-size: 4vw; /* Пропорциональный размер шрифта */
+            margin-bottom: 2vw;
+        }
+
+        input, select, button {
+            font-size: 4vw; /* Пропорциональный размер шрифта для ввода, селектов и кнопок */
+            margin: 2vw;
+            padding: 3vw;
+            border: 1px solid #000000;
+            border-radius: 45px;
+            background-color: #141414;
+            color: white;
+            width: 80%;
+            max-width: 500px;
+            text-align: center; /* Центрируем текст в текстовых полях */
+        }
+
+        button {
+            background-color: #00bf00;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #077e07;
+        }
+
+        p {
+            font-size: 5vw; /* Пропорциональный размер шрифта для текста */
+            margin: 3vw 0;
+        }
+
+        a {
+            color: white;
+            font-size: 5vw;
+            text-decoration: none;
+            margin-top: 4vw;
+            padding: 3vw 5vw;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            transition: background-color 0.3s;
+        }
+
+        a:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Медиазапросы для маленьких экранов */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 10vw; /* Уменьшаем размер шрифта на маленьких экранах */
+            }
+
+            label, input, select, button, p {
+                font-size: 6vw; /* Уменьшаем шрифт для малых экранов */
+            }
+        }
+
+        /* Медиазапросы для экранов более 1200px */
+        @media (min-width: 1200px) {
+            h1 {
+                font-size: 5vw; /* Уменьшаем размер шрифта на экранах более 1200px */
+            }
+
+            label, input, select, button, p {
+                font-size: 3.5vw; /* Уменьшаем шрифт на больших экранах */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="scene1">
+        <h1>Введіть дані</h1>
+        <form id="form">
+            <label for="date">Дата:</label>
+            <input type="text" id="date" name="date" value="" placeholder="ДД.ММ.ГГГГ">
+            
+            <label for="time">Час:</label>
+            <input type="text" id="time" name="time" value="" placeholder="ЧЧ:ММ:СС">
+            
+            <label for="passengers">Кількість пасажирів:</label>
+            <input type="number" id="passengers" name="passengers" value="1" min="1">
+            
+            <label for="timer">Таймер:</label>
+            <input type="text" id="timer" name="timer" value="60:00" readonly>
+            
+            <label for="vehicle">Транспорт:</label>
+            <select id="vehicle" name="vehicle">
+                <option value="Автобус">Автобус</option>
+                <option value="Тролейбус">Тролейбус</option>
+                <option value="Вагон">Вагон</option>
+            </select>
+            
+            <label for="vehicleNumber">Номер транспорту:</label>
+            <input type="text" id="vehicleNumber" name="vehicleNumber" placeholder="№ Номер транспорту">
+            
+            <p id="price">Ціна: 12</p>
+
+            <button type="button" onclick="goToScene2()">ПІДТВЕРДИТИ</button>
+        </form>
+    </div>
+
+    <script>
+        // Инициализация поля с текущей датой и временем
+        const dateInput = document.getElementById('date');
+        const timeInput = document.getElementById('time');
+        
+        const currentDate = new Date();
+        dateInput.value = `${currentDate.getDate().toString().padStart(2, '0')}.${(currentDate.getMonth() + 1).toString().padStart(2, '0')}.${currentDate.getFullYear()}`;
+        timeInput.value = `${currentDate.getHours().toString().padStart(2, '0')}:${currentDate.getMinutes().toString().padStart(2, '0')}:${currentDate.getSeconds().toString().padStart(2, '0')}`;
+        
+        // Обработчик для поля ввода номера транспорта
+        const vehicleInput = document.getElementById('vehicle');
+        const vehicleNumberInput = document.getElementById('vehicleNumber');
+        const priceDisplay = document.getElementById('price');
+
+        vehicleInput.addEventListener('change', updateVehicleNumberLimitAndPrice);
+
+        function updateVehicleNumberLimitAndPrice() {
+            const vehicleType = vehicleInput.value;
+            if (vehicleType === 'Автобус') {
+                vehicleNumberInput.maxLength = 5; // 1 символ "№" + 5 цифр
+                priceDisplay.textContent = "Ціна: 12";
+            } else {
+                vehicleNumberInput.maxLength = 4; // 1 символ "№" + 4 цифры
+                priceDisplay.textContent = "Ціна: 8";
+            }
+            // Автоматически добавляем "№" в начало
+            if (!vehicleNumberInput.value.startsWith('№')) {
+                vehicleNumberInput.value = '№' + vehicleNumberInput.value.replace(/^№\s*/, '');
+            }
+        }
+
+        // Инициализация для номера транспорта
+        updateVehicleNumberLimitAndPrice();
+
+        // Переход на сцену 2
+        function goToScene2() {
+            // Сохраняем введенные данные в localStorage
+            localStorage.setItem('date', dateInput.value);
+            localStorage.setItem('time', timeInput.value);
+            localStorage.setItem('passengers', document.getElementById('passengers').value);
+            localStorage.setItem('vehicle', vehicleInput.value);
+            localStorage.setItem('vehicleNumber', vehicleNumberInput.value);
+            // Сохраняем только число в price, убирая "Ціна: "
+            localStorage.setItem('price', priceDisplay.textContent.replace('Ціна: ', '').trim());
+
+            // Переход на страницу 2
+            window.location.href = 'page2.html'; 
+        }
+
+        if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/service-worker.js')
+      .then((registration) => {
+        console.log('Service Worker зарегистрирован:', registration);
+      })
+      .catch((error) => {
+        console.log('Ошибка при регистрации Service Worker:', error);
+      });
+  });
+}
+    </script>
+</body>
+</html>

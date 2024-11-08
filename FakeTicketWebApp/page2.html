@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <!-- Для iPhone -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="FakeTicket App">
+    <link rel="apple-touch-icon" href="Ticket_logo_192x192.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FakeTicket - Page 2</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: url('images/back.png');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        #scene2 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5%;
+            box-sizing: border-box;
+            width: 100%;
+            height: 100%;
+        }
+
+        p {
+            font-size: 5vw; /* Используем относительные единицы */
+            margin: 2% 0;
+            position: absolute;
+        }
+
+        #priceDisplay {
+            font-size: 7vw;
+            margin-top: 3%;
+            font-family: 'Verdana', sans-serif; 
+            font-weight: bold; 
+        }
+
+        #timer {
+            font-size: 5vw;
+            margin-top: 3%;
+            font-family: 'Open Sans', sans-serif; 
+            font-weight: bold;
+        }
+
+        a {
+            color: white;
+            font-size: 4vw;
+            text-decoration: none;
+            margin-top: 3%;
+            padding: 1vw 2vw;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        a:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        #backButton {
+            position: absolute;
+            top: 4.5%;
+            left: 5%;
+            cursor: pointer;
+            z-index: 1000;
+            padding: 4vw;
+            background-color: rgba(0, 0, 0, 0);
+            color: white;
+            font-size: 4vw;
+            border-radius: 5px;
+        }
+
+        #backButton:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div id="scene2">
+        <p id="dateDisplay"><span></span></p>
+        <p id="timeDisplay"><span></span></p>
+        <p id="passengersDisplay"><span></span></p>
+        <p id="vehicleDisplay"><span></span></p>
+        <p id="vehicleNumberDisplay"><span></span></p>
+        <p id="priceDisplay"><span></span></p>
+        <p id="timer"><span></span></p>
+        <a href="index.html" id="backButton"></a>
+    </div>
+
+    <script>
+        // Загружаем данные из localStorage и отображаем их
+        document.getElementById('dateDisplay').querySelector('span').textContent = localStorage.getItem('date');
+        document.getElementById('timeDisplay').querySelector('span').textContent = localStorage.getItem('time');
+        document.getElementById('passengersDisplay').querySelector('span').textContent = localStorage.getItem('passengers');
+        document.getElementById('vehicleDisplay').querySelector('span').textContent = localStorage.getItem('vehicle');
+        document.getElementById('vehicleNumberDisplay').querySelector('span').textContent = localStorage.getItem('vehicleNumber');
+        document.getElementById('priceDisplay').querySelector('span').textContent = localStorage.getItem('price');
+
+        // Таймер на 1 час (в минутах и секундах)
+        let timeLeft = 60 * 60;
+
+        function updateTimer() {
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            let formattedTime = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('timer').querySelector('span').textContent = formattedTime;
+
+            if (timeLeft > 0) {
+                timeLeft--;
+            } else {
+                clearInterval(timerInterval);
+                document.getElementById('timer').querySelector('span').textContent = "Время истекло";
+            }
+        }
+
+        let timerInterval = setInterval(updateTimer, 1000);
+
+        // Функция для изменения координат и размера каждого элемента
+        function moveElement(id, topPercent, leftPercent, widthPercent, heightPercent) {
+            const element = document.getElementById(id);
+            element.style.top = topPercent + '%';
+            element.style.left = leftPercent + '%';
+            element.style.width = widthPercent + '%';
+            element.style.height = heightPercent + '%';
+        }
+
+        // Пример изменения координат для каждого элемента:
+        moveElement('dateDisplay', 73, 9.5, 30, 7);  // Дата
+        moveElement('timeDisplay', 73, 35, 30, 7);  // Час
+        moveElement('passengersDisplay', 73, 61, 30, 7);  // Пасажири
+        moveElement('vehicleDisplay', 65.5, 35, 30, 7);  // Тип транспорту
+        moveElement('vehicleNumberDisplay', 60.9, 34.7, 30, 7);  // Номер транспорту
+        moveElement('priceDisplay', 43.25, 35, 30, 7);  // Цена
+        moveElement('timer', 81.3, 35, 30, 7);  // Таймер
+
+        // Динамическое изменение размера шрифта
+        function changeFontSize(id, fontSizeVW) {
+            const element = document.getElementById(id);
+            element.style.fontSize = fontSizeVW + 'vw';
+        }
+
+                // Функция для изменения цвета шрифта каждого элемента
+                function changeFontColor(id, color) {
+            const element = document.getElementById(id);
+            element.style.color = color;
+        }
+
+        // Пример использования для изменения цвета шрифта с HEX-кодами
+        changeFontColor('dateDisplay', '#efefef');    // Красный
+        changeFontColor('timeDisplay', '#efefef');    // Зеленый
+        changeFontColor('passengersDisplay', '#efefef'); // Синий
+        changeFontColor('vehicleDisplay', '#a3a3a3');  // Желтый
+        changeFontColor('vehicleNumberDisplay', '#e2e2e2'); // Оранжевый
+        changeFontColor('priceDisplay', '#00a4f2');    // Розовый
+        changeFontColor('timer', '#00bc11');
+
+        // Пример изменения размера шрифта:
+        changeFontSize('dateDisplay', 5);  // Размер шрифта для Даты
+        changeFontSize('timeDisplay', 5);  // Размер шрифта для Часа
+        changeFontSize('passengersDisplay', 5); // Размер шрифта для Пасажири
+        changeFontSize('vehicleDisplay', 4.5);   // Размер шрифта для Тип транспорту
+        changeFontSize('vehicleNumberDisplay', 6); // Размер шрифта для Номер транспорту
+        changeFontSize('priceDisplay', 9);    // Размер шрифта для Ціна
+        changeFontSize('timer', 6.1);           // Размер шрифта для Таймер
+
+        // Обработчик изменения размера окна
+        window.addEventListener('resize', function() {
+        moveElement('dateDisplay', 73.4, 9.5, 30, 7);  // Дата
+        moveElement('timeDisplay', 73.4, 35, 30, 7);  // Час
+        moveElement('passengersDisplay', 73.4, 61, 30, 7);  // Пасажири
+        moveElement('vehicleDisplay', 65.5, 35, 30, 7);  // Тип транспорту
+        moveElement('vehicleNumberDisplay', 61.6, 34.7, 30, 7);  // Номер транспорту
+        moveElement('priceDisplay', 44.25, 35, 30, 7);  // Цена
+        moveElement('timer', 81.3, 35, 30, 7);  // Таймер
+
+        changeFontSize('dateDisplay', 5);  // Размер шрифта для Даты
+        changeFontSize('timeDisplay', 5);  // Размер шрифта для Часа
+        changeFontSize('passengersDisplay', 5); // Размер шрифта для Пасажири
+        changeFontSize('vehicleDisplay', 4.5);   // Размер шрифта для Тип транспорту
+        changeFontSize('vehicleNumberDisplay', 6); // Размер шрифта для Номер транспорту
+        changeFontSize('priceDisplay', 9);    // Размер шрифта для Ціна
+        changeFontSize('timer', 6.1);
+        });
+
+        if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('/service-worker.js')
+      .then((registration) => {
+        console.log('Service Worker зарегистрирован:', registration);
+      })
+      .catch((error) => {
+        console.log('Ошибка при регистрации Service Worker:', error);
+      });
+  });
+}
+
+    </script>
+</body>
+</html>

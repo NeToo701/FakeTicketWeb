@@ -1,0 +1,22 @@
+{
+    "name": "FakeTicket App",
+    "short_name": "FakeTicket",
+    "description": "Фейк-квиток для показу оплати",
+    "start_url": "/index.html", 
+    "display": "standalone", 
+    "background_color": "#1b1b1b",
+    "theme_color": "#00c000",
+    "icons": [
+      {
+        "src": "images/Ticket_logo_192x192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      },
+      {
+        "src": "images/Ticket_logo_512x512.png",
+        "sizes": "512x512",
+        "type": "image/png"
+      }
+    ]
+  }
+  
